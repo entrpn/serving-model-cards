@@ -1,5 +1,18 @@
-# serving stable-diffusion
-![](../images/ddlm_2.png)
+# Stable Diffusion
+<center>
+    <image src="../images/ddlm_2.png" width="256px">
+    <p>prompt: A woman dressed like the Mexican Holiday Dia de los Muertos</p>
+</center>
+
+
+
+
+
+## Intro
+
+This repo containerizes [stable diffusion](https://github.com/CompVis/stable-diffusion) into a serving container using [fastapi](https://fastapi.tiangolo.com/). 
+
+**The model license can be found [here.](https://github.com/CompVis/stable-diffusion/blob/main/LICENSE)**
 
 ## Setup
 
