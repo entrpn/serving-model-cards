@@ -4,17 +4,20 @@
     <p>prompt: A woman dressed like the Mexican Holiday Dia de los Muertos</p>
 </center>
 
-
-
-
-
 ## Intro
 
 This repo containerizes [stable diffusion](https://github.com/CompVis/stable-diffusion) into a serving container using [fastapi](https://fastapi.tiangolo.com/). 
 
 **The model license can be found [here.](https://github.com/CompVis/stable-diffusion/blob/main/LICENSE)**
 
+Features:
+- Text to image
+- Image to image
+- Negative prompting 
+
 ## Setup
+
+[![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.svg)](https://shell.cloud.google.com/cloudshell/editor?cloudshell_git_repo=http://path-to-repo/sample.git)
 
 1. Clone repo if you haven't. Navigate to the `stable-diffusion` folder.
 1. Build container. Don't forget to change the `project_id` to yours.
