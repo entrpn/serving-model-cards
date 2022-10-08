@@ -4,15 +4,16 @@
     <p>prompt: A woman dressed like the Mexican Holiday Dia de los Muertos</p>
 </center>
 
-
-
-
-
 ## Intro
 
 This repo containerizes [stable diffusion](https://github.com/CompVis/stable-diffusion) into a serving container using [fastapi](https://fastapi.tiangolo.com/). 
 
 **The model license can be found [here.](https://github.com/CompVis/stable-diffusion/blob/main/LICENSE)**
+
+Features:
+- Text to image
+- Image to image
+- Negative prompting 
 
 ## Setup
 
