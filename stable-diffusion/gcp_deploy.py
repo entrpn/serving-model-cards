@@ -53,8 +53,9 @@ def main(opt):
         accelerator_type=opt.gpu_type,
         accelerator_count=opt.accelerator_count,
         sync=True,
-        autoscaling_target_cpu_utilization=opt.cpu_duty_cycle,
-        autoscaling_target_accelerator_duty_cycle=opt.accelerator_duty_cycle
+        # Broken in cloud shell
+        # autoscaling_target_cpu_utilization=opt.cpu_duty_cycle,
+        # autoscaling_target_accelerator_duty_cycle=opt.accelerator_duty_cycle
         
     )
 
@@ -127,13 +128,13 @@ if __name__ == "__main__":
         "--accelerator-duty-cycle",
         type=int,
         default=20,
-        help="Autoscaling for GPUs. 0 forces the endpoint to autoscale immediately if --min-replica-count > 1"
+        help="Autoscaling for GPUs."
     )
     parser.add_argument(
         "--cpu-duty-cycle",
         type=int,
         default=5,
-        help="Autoscaling for CPUs. 0 forces the endpoint to autoscale immediately if --min-replica-count > 1"
+        help="Autoscaling for CPUs."
     )
 
     opt = parser.parse_args()

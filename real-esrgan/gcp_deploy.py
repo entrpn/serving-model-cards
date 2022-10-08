@@ -52,8 +52,7 @@ def main(opt):
         max_replica_count=opt.max_replica_count,
         accelerator_type=opt.gpu_type,
         accelerator_count=opt.accelerator_count,
-        sync=True,
-        deploy_request_timeout=300.0
+        sync=True
     )
 
     print("done")
