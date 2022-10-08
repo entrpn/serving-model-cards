@@ -153,11 +153,15 @@ python gcp_deploy.py --image-uri ${location}-docker.pkg.dev/${project_id}/${mode
 This script takes some time to finish as the serving infrastructure is being created and the container is being deployed. Once this is finished, you'll receive a log with the endpoint name. Make note of it as you'll use this in the final step. It should look like:
 
 ```text
-
+Deploy Endpoint model backing LRO: projects/611544971877/locations/us-central1/endpoints/3370654051117083392/operations/1401138463849152512
 ```
 
 ## Make predictions
 
+We can make a prediction with the following script. Change the `endpoint-name` to the one that was printed for you in the previous step.
+
 ```shell
-python generate_request_vertex.py
+python generate_request_vertex.py --endpoint-name projects/611544971877/locations/us-central1/endpoints/3370654051117083392/operations/1401138463849152512
 ```
+
+Once this script completes, a `response.json` will be generated inside the current folder. 
