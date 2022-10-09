@@ -3,7 +3,7 @@ import torch
 from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode
 
-import BytesIO
+from io import BytesIO
 import base64
 
 from models.blip import blip_decoder
@@ -14,7 +14,7 @@ from models.blip_itm import blip_itm
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 def load_image(image, image_size):
-    img_bytes = base64.b64decode(base64_image_str)
+    img_bytes = base64.b64decode(image)
     img_file = BytesIO(img_bytes)  # convert image to file-like object
     image = Image.open(img_file)   # img is now PIL Image object
     transform = transforms.Compose([
@@ -91,5 +91,5 @@ def feature_extraction(image, image_size, captions):
         multimodal_feature = model(image, caption, mode='multimodal')[0,0]
         image_feature = model(image, caption, mode='image')[0,0]
         text_feature = model(image, caption, mode='text')[0,0]
-        retval.append("caption" : caption, "image_feature" : image_feature, "text_feature" : text_feature)
+        retval.append({"caption" : caption, "image_feature" : image_feature, "text_feature" : text_feature, "multimodal_feature" : multimodal_feature})
     return retval

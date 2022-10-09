@@ -53,7 +53,6 @@ async def predict(request: Request):
     }
     """
     body = await request.json()
-
     instances = body["instances"]
     
     retval = []
@@ -71,7 +70,6 @@ async def predict(request: Request):
             image_size = config.get('img_size', 480)
             question = instance['questions']
             ret = qna(image, image_size, question)
-            ret['parameters'] = config
         elif inference_type == 'img2txt_matching':
             image_size = config.get('img_size', 384)
             captions = instance['captions']
@@ -80,6 +78,7 @@ async def predict(request: Request):
             image_size = config.get('img_size', 224)
             captions = instance['captions']
             retval.append(feature_extraction(image, image_size, captions))
+        print(ret)
         ret['parameters'] = config
         retval.append(ret)
 
