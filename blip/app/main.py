@@ -15,6 +15,8 @@ from tqdm import tqdm, trange
 from itertools import islice
 import time
 
+from infer import caption, qna, img2txt_matching, feature_extraction
+
 import logging
 logger = logging.getLogger()
 logging.basicConfig(level=logging.DEBUG)
@@ -35,17 +37,18 @@ async def predict(request: Request):
     Request: 
     {
         "instances" : [
-            {"image" : "base64encodedimage"}
+            {"image" : "base64encodedimage",
+             "questions" : ["Where is the woman sitting?"],
+             "captions" : ["a woman sitting on the beach with a dog"]
+            }
         ,
             "parameters" : {
-                "w" : 0.5,
-                "upscale" : 2,
-                "has_aligned" : false,
-                "only_center_face" : false,
-                "draw_box" : false,
-                "bg_upsampler" "None",
-                "face_upsample" : false,
-                "bg_tile" : 400
+                "type" : "captioning|qna|img2txt_matching|feature_extraction",
+                "sample" : false,
+                "img_size" : 384,
+                "num_beams" : 3,
+                "max_length" : 20,
+                "min_length" : 5
         }]
     }
     """
@@ -57,7 +60,27 @@ async def predict(request: Request):
     for instance in instances:
         image = instance["image"]
         config = instance["parameters"]
+        inference_type = config.get('type','captioning')
+        if inference_type == 'captioning':
+            image_size = config.get('img_size', 384)
+            num_beams = config.get('num_beams', 3)
+            max_length = config.get('max_length', 20)
+            min_length = config.get('min_length', 5)
+            ret = caption(image, image_size, num_beams, max_length, min_length)
+        elif inference_type == 'qna':
+            image_size = config.get('img_size', 480)
+            question = instance['questions']
+            ret = qna(image, image_size, question)
+            ret['parameters'] = config
+        elif inference_type == 'img2txt_matching':
+            image_size = config.get('img_size', 384)
+            captions = instance['captions']
+            retval.append(img2txt_matching(image, image_size, captions))
+        elif inference_type == 'feature_extraction':
+            image_size = config.get('img_size', 224)
+            captions = instance['captions']
+            retval.append(feature_extraction(image, image_size, captions))
+        ret['parameters'] = config
+        retval.append(ret)
 
-        image, error = face_restore(net, image, config)
-        retval.append(image)
-    return {"predictions" : retval, "error" : error}
+    return {"predictions" : retval}
