@@ -33,7 +33,7 @@ def make_request(image, parameters, questions=[],captions=[]):
 with open('../images/blip_test.jpeg', "rb") as image_file:
     image = base64.b64encode(image_file.read())
 
-## CAPTIONING
+## Captioning
 
 parameters = {
     'type' : 'captioning',
@@ -44,7 +44,7 @@ parameters = {
     'min_length' : 5
 }
 
-make_request(image, parameters)
+#make_request(image, parameters)
 
 ## QNA
 
@@ -53,7 +53,22 @@ parameters = {
     'img_size' : 480,
 }
 
-make_request(image, parameters, questions=['where is the woman sitting?', 'where is the woman sitting?'])
+#make_request(image, parameters, questions=['where is the woman sitting?', 'where is the woman sitting?'])
 
+## Feature Extraction
 
+parameters = {
+    'type' : 'feature_extraction',
+    'img_size' : 224,
+}
 
+#make_request(image, parameters, captions=['a woman sitting on the beach with a dog','a woman sitting on the beach with a dog'])
+
+## Image text matching
+
+parameters = {
+    'type' : 'imgtxt_matching',
+    'img_size' : 384
+}
+
+make_request(image, parameters, captions=['a woman sitting on the beach with a dog','a woman sitting on the beach with a dog'])

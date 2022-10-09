@@ -71,8 +71,10 @@ def img2txt_matching(image, image_size, captions):
     for caption in captions:
         itm_output = model(image,caption,match_head='itm')
         itm_score = torch.nn.functional.softmax(itm_output,dim=1)[:,1]
+        itm_score = float(itm_score[0])
 
         itc_score = model(image,caption,match_head='itc')
+        itc_score = float(itc_score[0][0])
 
         retval.append({"caption" : caption, "match_probability" : itm_score, "cosine_similarity" : itc_score})
     
@@ -91,5 +93,7 @@ def feature_extraction(image, image_size, captions):
         multimodal_feature = model(image, caption, mode='multimodal')[0,0]
         image_feature = model(image, caption, mode='image')[0,0]
         text_feature = model(image, caption, mode='text')[0,0]
-        retval.append({"caption" : caption, "image_feature" : image_feature, "text_feature" : text_feature, "multimodal_feature" : multimodal_feature})
+        retval.append({"caption" : caption, "image_feature" : image_feature.cpu().detach().numpy().tolist(), 
+            "text_feature" : text_feature.cpu().detach().numpy().tolist(), 
+            "multimodal_feature" : multimodal_feature.cpu().detach().numpy().tolist()})
     return retval

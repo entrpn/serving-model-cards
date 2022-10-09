@@ -43,7 +43,7 @@ async def predict(request: Request):
             }
         ,
             "parameters" : {
-                "type" : "captioning|qna|img2txt_matching|feature_extraction",
+                "type" : "captioning|qna|imgtxt_matching|feature_extraction",
                 "sample" : false,
                 "img_size" : 384,
                 "num_beams" : 3,
@@ -65,20 +65,19 @@ async def predict(request: Request):
             num_beams = config.get('num_beams', 3)
             max_length = config.get('max_length', 20)
             min_length = config.get('min_length', 5)
-            ret = caption(image, image_size, num_beams, max_length, min_length)
+            ret = {'captionining' : caption(image, image_size, num_beams, max_length, min_length)}
         elif inference_type == 'qna':
             image_size = config.get('img_size', 480)
             question = instance['questions']
-            ret = qna(image, image_size, question)
-        elif inference_type == 'img2txt_matching':
+            ret = {'qna' : qna(image, image_size, question)}
+        elif inference_type == 'imgtxt_matching':
             image_size = config.get('img_size', 384)
             captions = instance['captions']
-            retval.append(img2txt_matching(image, image_size, captions))
+            ret = {'imgtxt_matching' : img2txt_matching(image, image_size, captions)}
         elif inference_type == 'feature_extraction':
             image_size = config.get('img_size', 224)
             captions = instance['captions']
-            retval.append(feature_extraction(image, image_size, captions))
-        print(ret)
+            ret = {'feature_extraction' : feature_extraction(image, image_size, captions)}
         ret['parameters'] = config
         retval.append(ret)
 
