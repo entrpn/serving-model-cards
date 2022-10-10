@@ -101,7 +101,7 @@ This operations takes about 15 minutes to complete.
 Now that the container has been uploaded to the container registry, we can deploy it to Vertex AI. First let's see what options are available in the deployment script.
 
 ```shell
-python gcp_deploy.py --help
+python ../gcp_deploy.py --help
 ```
 
 ```shell

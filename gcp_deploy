@@ -40,17 +40,23 @@ def main(opt):
         print("undeploying previous models...")
         endpoint.undeploy_all()
 
+    accelerator_count = opt.accelerator_count
+    accelerator_type = opt.gpu_type
+    if accelerator_count == 0:
+        accelerator_count = None
+        accelerator_type = None
+        
     #NVIDIA_TESLA_V100
     #NVIDIA_TESLA_T4
     endpoint.deploy(
         model,
-        deployed_model_display_name="stable_diffusion_endpoint_deployed",
+        deployed_model_display_name=opt.endpoint_deployed_name,
         traffic_percentage=100,
         machine_type=opt.machine_type,
         min_replica_count=opt.min_replica_count,
         max_replica_count=opt.max_replica_count,
-        accelerator_type=opt.gpu_type,
-        accelerator_count=opt.accelerator_count,
+        accelerator_type=accelerator_type,
+        accelerator_count=accelerator_count,
         sync=True,
         # Broken in cloud shell
         # autoscaling_target_cpu_utilization=opt.cpu_duty_cycle,
@@ -101,26 +107,26 @@ if __name__ == "__main__":
     parser.add_argument(
         "--model-name",
         type=str,
-        default="codeformer",
+        required=True,
         help="name of model"        
     )
     parser.add_argument(
         "--endpoint-name",
         type=str,
-        default="codeformer-endpoint",
+        required=True,
         help="Name of endpoint"        
     )
     parser.add_argument(
         "--endpoint-deployed-name",
         type=str,
-        default="codeformer_endpoint_deployed",
+        required=True,
         help="Endpoint deployed name"
     )
     parser.add_argument(
         "--image-uri",
         type=str,
         required=True,
-        help="name of image in gcr. Ex: gcr.io/project-name/codeformer:latest"
+        help="name of image in gcr. Ex: gcr.io/${project-name}/${model}:latest"
     )
     parser.add_argument(
         "--accelerator-duty-cycle",
