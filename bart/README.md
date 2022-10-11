@@ -6,7 +6,7 @@ This repo containerizes [BART](https://huggingface.co/facebook/bart-large-cnn) i
 
 CPU and GPU inference supported.
 
-**The model license can be found [here].(https://huggingface.co/models?license=license:apache-2.0)**
+**The model license can be found [here](https://huggingface.co/models?license=license:apache-2.0)**
 
 ## Setup
 
