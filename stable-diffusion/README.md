@@ -53,7 +53,7 @@ You'll need to enable Vertex AI and have authenticated with a service account th
  1. Deploy in Vertex AI Endpoints.
 
     ```bash
-    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/stable-diffusion:latest
+    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/stable-diffusion:latest --model-name stable-diffusion --endpoint-name stable-diffusion-endpoint --endpoint-deployed-name stable-diffusion-deployed-name
     ```
 
 1. Test the endpoint. 

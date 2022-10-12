@@ -51,7 +51,7 @@ You'll need to enable Vertex AI and have authenticated with a service account th
  1. Deploy in Vertex AI Endpoints.
 
     ```bash
-    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/blip:latest --accelerator-count 0
+    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/blip:latest --accelerator-count 0 --model-name blip --endpoint-name blip-endpoint --endpoint-deployed-name blip-deployed-name
     ```
 
 1. Test the endpoint. 

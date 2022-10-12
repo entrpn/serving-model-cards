@@ -43,7 +43,7 @@ You'll need to enable Vertex AI and have authenticated with a service account th
  1. Deploy in Vertex AI Endpoints.
 
     ```bash
-    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/bart:latest --accelerator-count 0
+    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/bart:latest --accelerator-count 0 --model-name bart --endpoint-name bart-endpoint --endpoint-deployed-name bart-deployed-name
     ```
 
 1. Test the endpoint. 

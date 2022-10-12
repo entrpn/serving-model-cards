@@ -47,7 +47,7 @@ You'll need to enable Vertex AI and have authenticated with a service account th
  1. Deploy in Vertex AI Endpoints.
 
     ```bash
-    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/real-esrgan:latest
+    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/real-esrgan:latest --model-name real-esrgan --endpoint-name real-esrgan-endpoint --endpoint-deployed-name real-esrgan-deployed-name
     ```
 
 1. Test the endpoint.
