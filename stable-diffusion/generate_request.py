@@ -19,7 +19,7 @@ appDict = {
         #     }
         # },
         {
-            "prompt" : "An apocalyptic alien city ravaged by time, highly detailed, cinematic, intricate, trending in artstation",
+            "prompt" : "a photo of eggs and (((bacon))) on a frying pan",
             "parameters": {
                 "ddim_steps" : 30,
                 "scale" : 7.5,

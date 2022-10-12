@@ -28,6 +28,7 @@ from ldm.models.diffusion.plms import PLMSSampler
 
 from txt2img import txt2img
 from img2img import img2img
+from emphasis import FrozenCLIPEmbedderWithCustomWords
 
 import logging
 logger = logging.getLogger()
@@ -56,6 +57,7 @@ device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 
 config = OmegaConf.load("configs/stable-diffusion/v1-inference.yaml")
 model = load_model_from_config(config, "models/ldm/stable-diffusion-v1/model.ckpt", device)
+emphasis_embedding = FrozenCLIPEmbedderWithCustomWords(model.cond_stage_model)
 
 txt2img_outdir = "/outputs/txt2img-samples"
 img2img_outdir = "/outputs/img2img-samples"
@@ -105,7 +107,8 @@ async def predict(request: Request):
                             prompt=prompt,
                             config=config,
                             outpath=txt2img_outdir,
-                            uc=uc)
+                            emphasis_embedding=emphasis_embedding,
+                            negative_prompt=uc)
 
         elif infer_type == 'img2img':
             image = instances[0]["image"]
@@ -116,6 +119,7 @@ async def predict(request: Request):
                             prompt=prompt,
                             config=config,
                             outpath=img2img_outdir,
-                            uc=uc)
+                            emphasis_embedding=emphasis_embedding,
+                            negative_prompt=uc)
         retval.append({"prompt" : prompt, "images" : images})
     return {"predictions" : retval}

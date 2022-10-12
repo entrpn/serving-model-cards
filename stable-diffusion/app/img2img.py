@@ -27,7 +27,7 @@ def load_img(base64_image_str):
     image = torch.from_numpy(image)
     return 2.*image - 1.
 
-def img2img(model, sampler, image, prompt, config, outpath, uc=[""]):
+def img2img(model, sampler, image, prompt, config, outpath, emphasis_embedding, negative_prompt=[""]):
     DEFAULT_DDIM_STEPS = 50
     DEFAULT_SEED = 42
     # eta=0.0 corresponds to deterministic sampling
@@ -74,13 +74,11 @@ def img2img(model, sampler, image, prompt, config, outpath, uc=[""]):
         with precision_scope("cuda"):
             for _ in trange(n_iter, desc="Sampling"):
                 for prompts in tqdm(data, desc="data"):
-                    uc = None
                     if scale != 1.0:
-                            uc = model.get_learned_conditioning(batch_size * uc)
+                        uc = model.get_learned_conditioning(batch_size * negative_prompt)
                     if isinstance(prompts, tuple):
-                            prompts = list(prompts)
-                    c = model.get_learned_conditioning(prompts)
-
+                        prompts = list(prompts)
+                    c = emphasis_embedding(prompts)
                     #encode
                     z_enc = sampler.stochastic_encode(init_latent, torch.tensor([t_enc]*batch_size).to(device))
                     # decode it

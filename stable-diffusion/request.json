@@ -1,1 +1,0 @@
-{"instances": [{"prompt": "An apocalyptic alien city ravaged by time, highly detailed, cinematic, intricate, trending in artstation", "parameters": {"ddim_steps": 30, "scale": 7.5, "n_samples": 2, "n_itter": 2, "type": "txt2img"}}]}
