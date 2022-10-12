@@ -11,9 +11,10 @@ This repo containerizes [stable diffusion](https://github.com/CompVis/stable-dif
 **The model license can be found [here.](https://github.com/CompVis/stable-diffusion/blob/main/LICENSE)**
 
 Features:
-- Text to image
-- Image to image
-- Negative prompting 
+- Text to image.
+- Image to image.
+- Negative prompting.
+- Word emphasis.
 
 ## Setup
 
