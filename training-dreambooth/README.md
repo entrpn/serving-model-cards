@@ -13,7 +13,7 @@ Features:
 ## Setup
 
 1. Clone repo if you haven't. Navigate to the `training-dreambooth` folder.
-1. Create a folder `images` with your subject images. You'll need at least 8 images as we'll be using a TPU-v3 that has 8 cores.
+1. Create a folder `images` with your subject images.
 1. Build and push the image. Don't forget to change the `project_id` to yours.
 
     ```bash
