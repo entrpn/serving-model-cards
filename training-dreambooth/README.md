@@ -8,6 +8,7 @@ This repo prepares a Vertex AI training job for [dreambooth](https://github.com/
 
 Features:
 - Dreambooth is a method to personalize text2image models like stable diffusion given just a few(3~5) images of a subject.
+- Tunes the tokenizer.
 
 ## Setup
 
@@ -28,5 +29,7 @@ Features:
         --image-uri=gcr.io/{project_id}/training-dreambooth:latest \
         --gcs-output-dir=gs://my-bucket-name \
         --instance-prompt="A photo of sks man" \
-        --hf-token="some hf token"
+        --hf-token="some hf token" \
+        --class-prompt="A photo of sks dog" \
+        --max-train-steps=800
     ```

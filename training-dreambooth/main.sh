@@ -12,4 +12,5 @@ python3 train.py --pretrained_model_name_or_path=$MODEL_NAME \
     --num_class_images=$NUM_CLASS_IMAGES \
     --prior_loss_weight=$PRIOR_LOSS_WEIGHT \
     --mixed_precision=bf16 \
-    --hub_token=$HF_TOKEN
+    --hub_token=$HF_TOKEN \
+    --train_text_encoder

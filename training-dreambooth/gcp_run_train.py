@@ -159,13 +159,6 @@ def parse_args():
         default="0.5",
         help="The weight of prior preservation loss."
     )
-    parser.add_argument(
-        "--gcs-output-dir",
-        type=str,
-        default=None,
-        required=True,
-        help="The output directory where the model predictions and checkpoints will be written. Ex: gs://my-output-dir/"
-    )
 
     args = parser.parse_args()
 
