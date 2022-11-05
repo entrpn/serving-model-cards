@@ -9,7 +9,8 @@ def main(opt):
     instances_list = {
             "instances" : [
                 {
-                    "prompt": "A dog wearing a hat",
+                    "prompt": "A photograph of a beautiful model played by Cara Delevingne, intricate, delicate, (((highly detailed))), cinematic, 4k, (((nikon slr)))",
+                    'uc' : ['hands, fingers'],
                     "parameters" : {
                         "scale" : 7.5,
                         "seed" : 42,
