@@ -28,8 +28,8 @@ Features:
     python gcp_run_train.py --project-id={project-id} --region=us-central1 \
         --image-uri=gcr.io/{project_id}/training-dreambooth:latest \
         --gcs-output-dir=gs://my-bucket-name \
-        --instance-prompt="A photo of sks man" \
+        --instance-prompt="A photo of sks dog" \
         --hf-token="some hf token" \
-        --class-prompt="A photo of sks dog" \
+        --class-prompt="A photo of a dog" \
         --max-train-steps=800
     ```
