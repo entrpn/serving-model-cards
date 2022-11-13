@@ -32,16 +32,12 @@ def create_custom_job_sample(
                         "args": [],
                         "env" : [
                             {"name" : "MODEL_NAME", "value" : args.model_name},
-                            {"name" : "INSTANCE_PROMPT", "value" : f"{args.instance_prompt}"},
                             {"name" : "GCS_OUTPUT_DIR", "value" : args.gcs_output_dir},
                             {"name" : "RESOLUTION", "value" : args.resolution},
                             {"name" : "BATCH_SIZE", "value" : args.batch_size},
                             {"name" : "LEARNING_RATE", "value" : args.learning_rate},
                             {"name" : "MAX_TRAIN_STEPS", "value" : args.max_train_steps},
                             {"name" : "HF_TOKEN", "value" : args.hf_token},
-                            {"name" : "CLASS_PROMPT", "value" : args.class_prompt},
-                            {"name" : "NUM_CLASS_IMAGES", "value" : args.num_class_images},
-                            {"name" : "PRIOR_LOSS_WEIGHT", "value" : args.prior_loss_weight},
                         ]
                     },
                 }
@@ -71,7 +67,7 @@ def parse_args():
     parser.add_argument(
         "--display-name",
         type=str,
-        default="training-dreambooth",
+        default="finetuning-stable-diffusion",
         help="Training job name"
     )
     parser.add_argument(
@@ -85,7 +81,7 @@ def parse_args():
         type=str,
         default=None,
         required=True,
-        help="GCR image. Ex: gcr.io/project_id/training-dreambooth:latest"
+        help="GCR image. Ex: gcr.io/project_id/finetuning-stable-diffusion:latest"
     )
     parser.add_argument(
         "--model-name",
@@ -99,13 +95,6 @@ def parse_args():
         required=True,
         default=None,
         help="A GCS bucket location. Ex: gs://my-bucket-name/sd-model/"
-    )
-    parser.add_argument(
-        "--instance-prompt",
-        type=str,
-        default=None,
-        required=True,
-        help="The instance prompt. Ex: A photo of sks dog"
     )
     parser.add_argument(
         "--resolution",
@@ -139,25 +128,6 @@ def parse_args():
         type=str,
         default=None,
         help="Hugginface token to access model."
-    )
-    parser.add_argument(
-        "--class-prompt",
-        type=str,
-        default=None,
-        help="Class prompt. Ex: a photo of a dog."
-    )
-    parser.add_argument(
-        "--num-class-images",
-        type=str,
-        default="128",
-        help="Minimal class images for prior preservation loss. If not have enough images, additional images will be"
-            " sampled with class_prompt."
-    )
-    parser.add_argument(
-        "--prior-loss-weight",
-        type=str,
-        default="0.5",
-        help="The weight of prior preservation loss."
     )
 
     args = parser.parse_args()

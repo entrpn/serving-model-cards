@@ -1,5 +1,4 @@
 #!/bin/bash
-echo $INSTANCE_PROMPT
 python3 train.py --pretrained_model_name_or_path=$MODEL_NAME \
     --instance_data_dir=images \
     --output_dir=/tmp/sd-model-output \
