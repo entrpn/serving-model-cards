@@ -115,7 +115,7 @@ def parse_args():
     )
 
     parser.add_argument(
-        "--batch_size",
+        "--batch-size",
         type=str,
         default="1",
         help="Per device batch size. Ex: On a TPUv3-8, a value of 1 will have a global batch size of 8"
