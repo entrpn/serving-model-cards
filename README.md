@@ -17,5 +17,5 @@ By using Vertex AI endpoints, users don't need to manage complex infrastructure 
 
 A collection of OSS models that are containerized and ready to be trained in GCP's [Vertex AI](https://cloud.google.com/vertex-ai) for easy deployment.
 
-| <a href="./training-dreambooth"><p><center>Train Dreambooth<img src="./images/dreambooth.png"></img><br>Finetune stable diffusion</br></center></p></a> | <a href="./finetuning-stable-diffusion"><p><center>Finetune Stable Diffusion<img src="./images/finetune_sd.png"></img><br>Finetune stable diffusion</br></center></p></a> | More to come
+| <a href="./training-dreambooth"><p><center>Train Dreambooth<img src="./images/dreambooth.png"></img><br>Personalize stable diffusion</br></center></p></a> | <a href="./finetuning-stable-diffusion"><p><center>Finetune Stable Diffusion<img src="./images/finetune_sd.png"></img><br>Finetune stable diffusion</br></center></p></a> | More to come
 |-|-|-|
