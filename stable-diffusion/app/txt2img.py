@@ -10,7 +10,9 @@ from einops import rearrange
 import numpy as np
 import torch
 from torch import autocast
-from pytorch_lightning import seed_everythingonfig, outpath, emphasis_embedding, negative_prompt=[""]):
+from pytorch_lightning import seed_everything
+
+def txt2img(model, sampler, prompt, config, outpath, emphasis_embedding, negative_prompt=[""]):
     DEFAULT_DDIM_STEPS = 50
     DEFAULT_SEED = 42
     # eta=0.0 corresponds to deterministic sampling

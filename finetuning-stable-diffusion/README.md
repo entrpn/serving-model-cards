@@ -28,7 +28,7 @@ Features:
     --image-uri=gcr.io/{project-id}/finetuning-sd:latest \
     --gcs-output-dir=gs://{project-id}-bucket/sd-finetuned-model \
     --hf-token="some hf token" --max-train-steps=15000 \
-    --batch-size=4 --learning-rate=1e-5
+    --batch-size=4 --learning-rate=1e-4
     ```
 
 1. Once your job is finished, the model will be uploaded to `gcs-output-dir`. You can use it in a GCP TPU-VM or Colab. Take a look at the [`infer_jax.py`](../training-dreambooth/infer_jax.py) script for an example of how to create images.

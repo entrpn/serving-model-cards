@@ -22,7 +22,7 @@ Features:
 1. Build container. Don't forget to change the `project_id` to yours.
 
     ```bash
-    docker build . -t gcr.io/{project_id}/stable-diffusion:latest
+    docker build --build-arg HF_TOKEN=<your huggingface token> . -t gcr.io/{project_id}/stable-diffusion:latest
     ```
 
 1. Run container. You need [NVIDIA docker](https://github.com/NVIDIA/nvidia-docker) and a GPU.

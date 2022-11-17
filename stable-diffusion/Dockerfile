@@ -30,8 +30,14 @@ RUN conda env create -f environment.yaml
 
 RUN mkdir models/ldm/stable-diffusion-v1
 RUN apt-get update && apt-get install -y curl 
-RUN curl https://www.googleapis.com/storage/v1/b/aai-blog-files/o/sd-v1-4.ckpt?alt=media > models/ldm/stable-diffusion-v1/model.ckpt
 
+ARG HF_TOKEN
+COPY download_weights.py .
+RUN pip install huggingface_hub \
+    && python3 download_weights.py --hf_token=$HF_TOKEN
+RUN cp models--CompVis--stable-diffusion-v-1-4-original/snapshots/f0bb45b49990512c454cf2c5670b0952ef2f9c71/sd-v1-4.ckpt models/ldm/stable-diffusion-v1/model.ckpt
+RUN ls -ll models/ldm/stable-diffusion-v1/
+RUN rm -rf models--CompVis--stable-diffusion-v-1-4-original
 RUN apt update && apt install -y libsm6 libxext6
 RUN apt-get install -y libxrender-dev
 
