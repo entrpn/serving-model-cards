@@ -4,7 +4,8 @@ RUN apt-get update && \
     apt-get install -y software-properties-common && \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt install -y python3.8
+    apt install -y python3.8 && \
+    apt-get -y install python3-pip
 
 RUN apt-get update && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
@@ -32,9 +33,9 @@ RUN mkdir models/ldm/stable-diffusion-v1
 RUN apt-get update && apt-get install -y curl 
 
 ARG HF_TOKEN
+COPY download_weights.sh .
 COPY download_weights.py .
-RUN pip install huggingface_hub \
-    && python3 download_weights.py --hf_token=$HF_TOKEN
+RUN ./download_weights.sh $HF_TOKEN
 RUN cp models--CompVis--stable-diffusion-v-1-4-original/snapshots/f0bb45b49990512c454cf2c5670b0952ef2f9c71/sd-v1-4.ckpt models/ldm/stable-diffusion-v1/model.ckpt
 RUN ls -ll models/ldm/stable-diffusion-v1/
 RUN rm -rf models--CompVis--stable-diffusion-v-1-4-original

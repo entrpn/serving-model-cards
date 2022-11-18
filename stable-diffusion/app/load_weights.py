@@ -47,16 +47,3 @@ seed_everything(42)
 
 config = OmegaConf.load("configs/stable-diffusion/v1-inference.yaml")
 model = load_model_from_config(config, "models/ldm/stable-diffusion-v1/model.ckpt")
-
-# device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-
-# sampler = PLMSSampler(model)
-
-# outdir = "/outputs/txt2img-samples"
-
-# os.makedirs(outdir, exist_ok=True)
-# outpath = outdir
-
-# n_samples = 3
-# batch_size = 3
-# n_rows = 3
