@@ -19,3 +19,10 @@ A collection of OSS models that are containerized and ready to be trained in GCP
 
 | <a href="./training-dreambooth"><p><center>Train Dreambooth<img src="./images/dreambooth.png"></img><br>Personalize stable diffusion</br></center></p></a> | <a href="./finetuning-stable-diffusion"><p><center>Finetune Stable Diffusion<img src="./images/finetune_sd.png"></img><br>Finetune stable diffusion</br></center></p></a> | More to come
 |-|-|-|
+
+# misc
+
+A collection of different jobs.
+
+| <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | More to come | More to come
+|-|-|-|
