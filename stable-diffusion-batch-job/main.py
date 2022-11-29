@@ -31,14 +31,16 @@ subfolders = "/".join(subfolders)
 if not subfolders.endswith(os.path.sep):
     subfolders += os.path.sep
 
-print(bucket_name)
-print(subfolders)
-
 storage_client = storage.Client()
 bucket = storage_client.bucket(bucket_name)
 
 metadata_blob = bucket.blob(f"{subfolders}results.jsonl")
+
+# If a metadata file already exists, read it so that not to overwrite results.
 retval = []
+if metadata_blob.exists():
+    with metadata_blob.open("r") as f:
+        retval.append(f.read())
 
 def get_scheduler(model_id, scheduler_name):
     scheduler = None

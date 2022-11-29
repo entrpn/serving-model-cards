@@ -26,10 +26,7 @@ Create a long running batch inference job to generate multiple images with multi
 1. Deploy.
 
     ```bash
-    python gcp_run_job.py --project-id={project-id} --region=us-central1 \
-    --image-uri=gcr.io/{project-id}/stable-diffusion-batch-job:latest \
-    --gcs-output-dir=gs://{project-id}-bucket/stable-diffusion-batch-job-results \
-    --hf-token="some hf token"
+    python gcp_deploy.py --project-id={project-id} --image-uri gcr.io/{project-id}/stable-diffusion-batch-job:latest --gcs-output-dir=gs://{project-id}-bucket/stable-diffusion-batch-job-results --hf-token={huggingface_token}
     ```
 
     The results will be in the `gcs-output-dir` folder with a `results.jsonl` specifying the parameters and the image uri. For example:
