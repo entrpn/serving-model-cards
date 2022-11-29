@@ -11,9 +11,10 @@ This repo containerizes [stable diffusion](https://github.com/CompVis/stable-dif
 **The model license can be found [here.](https://github.com/CompVis/stable-diffusion/blob/main/LICENSE)**
 
 Features:
-- Text to image
-- Image to image
-- Negative prompting 
+- Text to image.
+- Image to image.
+- Negative prompting.
+- Word emphasis.
 
 ## Setup
 
@@ -21,7 +22,7 @@ Features:
 1. Build container. Don't forget to change the `project_id` to yours.
 
     ```bash
-    docker build . -t gcr.io/{project_id}/stable-diffusion:latest
+    docker build --build-arg HF_TOKEN=<your huggingface token> . -t gcr.io/{project_id}/stable-diffusion:latest
     ```
 
 1. Run container. You need [NVIDIA docker](https://github.com/NVIDIA/nvidia-docker) and a GPU.
@@ -52,7 +53,7 @@ You'll need to enable Vertex AI and have authenticated with a service account th
  1. Deploy in Vertex AI Endpoints.
 
     ```bash
-    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/stable-diffusion:latest
+    python ../gcp_deploy.py --image-uri gcr.io/<project_id>/stable-diffusion:latest --model-name stable-diffusion --endpoint-name stable-diffusion-endpoint --endpoint-deployed-name stable-diffusion-deployed-name
     ```
 
 1. Test the endpoint. 

@@ -4,7 +4,8 @@ RUN apt-get update && \
     apt-get install -y software-properties-common && \
     add-apt-repository -y ppa:deadsnakes/ppa && \
     apt-get update && \
-    apt install -y python3.8
+    apt install -y python3.8 && \
+    apt-get -y install python3-pip
 
 RUN apt-get update && apt-get -y upgrade \
   && apt-get install -y --no-install-recommends \
@@ -30,7 +31,11 @@ RUN conda env create -f environment.yaml
 
 RUN mkdir models/ldm/stable-diffusion-v1
 RUN apt-get update && apt-get install -y curl 
-RUN curl https://www.googleapis.com/storage/v1/b/aai-blog-files/o/sd-v1-4.ckpt?alt=media > models/ldm/stable-diffusion-v1/model.ckpt
+
+ARG HF_TOKEN
+COPY download_weights.sh .
+COPY download_weights.py .
+RUN ./download_weights.sh $HF_TOKEN
 
 RUN apt update && apt install -y libsm6 libxext6
 RUN apt-get install -y libxrender-dev
