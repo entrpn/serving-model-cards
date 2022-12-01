@@ -2,3 +2,4 @@ stable-diffusion/response.json
 stable-diffusion/request.json
 training-dreambooth/images/*
 finetuning-stable-diffusion/dataset/*
+train_ui/.cache/*
