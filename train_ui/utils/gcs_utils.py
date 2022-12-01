@@ -14,6 +14,3 @@ def get_blob(gcs_uri):
 
 def read_image(blob):
     return Image.open(io.BytesIO(blob.download_as_string()))
-    # with blob.open("r") as f:
-    #     image = Image.open(io.BytesIO(f.read()))
-    # return image

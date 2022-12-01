@@ -19,7 +19,7 @@ with gr.Blocks() as demo:
         with gr.TabItem('Train', id='train_tab'):
             gr.Markdown("# Train UI")
             with gr.Column():
-                with gr.Accordion("## Project setup"):
+                with gr.Accordion("Project setup"):
                     gr.Markdown("""Train UI helps users easily train OSS models with little or no code using Vertex AI pipelines.
                     All you need is a [GCP project](https://cloud.google.com/).
                     """)
@@ -45,5 +45,6 @@ with gr.Blocks() as demo:
     # deploy_btn = gr.Button("deploy",)
 
     demo.load(_js=js())
-
+    
+demo.queue()
 demo.launch(share=False)

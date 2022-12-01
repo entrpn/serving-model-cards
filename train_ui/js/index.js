@@ -20,14 +20,6 @@ window.SD = (() => {
             let selected = gallery.querySelector(`.\\!ring-2`);
             selected = selected ? [...selected.parentNode.children].indexOf(selected) : 0;
             return [[x[selected],selected]]
-            // for (let i = 0; i < x.length; i++) {
-            //     let selected_index = 0
-            //     if (i == selected) {
-            //         selected_index = 1
-            //     }
-            //     retval.push([x[i], selected])
-            // }
-            // return retval;
         }
     }
     return new SDClass();
