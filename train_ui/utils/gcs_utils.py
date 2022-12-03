@@ -3,9 +3,8 @@ import io
 
 from google.cloud import storage
 
-storage_client = storage.Client()
-
 def get_blob(gcs_uri):
+    storage_client = storage.Client()
     bucket_name = gcs_uri.replace("gs://",'').split('/')[0]
     blob_uri = gcs_uri.replace(f"gs://{bucket_name}/",'')
     bucket = storage_client.bucket(bucket_name)

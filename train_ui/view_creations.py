@@ -13,8 +13,6 @@ from utils import gcs_utils, cloud_build_utils, vertexai_utils, cache_utils
 from css_and_js import call_js
 from constants import LOCAL_SAVE_PATH, MODELS
 
-storage_client = storage.Client()
-
 global_metadata_contents = []
 
 global_batch_job_entries = []
@@ -31,10 +29,10 @@ def load_ui_values():
         with open(UI_VALS_CACHE, 'r') as f:
             global_ui_values.update(json.loads(f.read()))
 
-def get_batch_job_status_str(build_id, cloud_build_status, job_id=None, job_state=None, results_blob_uri=None):
+def get_batch_job_status_str(build_id, build_status, job_id=None, job_state=None, results_blob_uri=None, job_error=None):
     retval = ""
     retval = f"Cloud build job launched : {build_id}\n"
-    retval += f"Cloud build job status................{cloud_build_status}\n"
+    retval += f"Cloud build job status................{build_status}\n"
     
     if job_id:
         retval += f"Vertex AI job id : {job_id}\n"
@@ -47,6 +45,8 @@ def get_batch_job_status_str(build_id, cloud_build_status, job_id=None, job_stat
     if results_blob_uri:
         retval += f"Results are located in {results_blob_uri}. Paste it in the Metadata uri textbox and click Load to view them."
 
+    if job_error is not None:
+        retval += f"Error: {job_error}"
     return retval
 
 def submit_batch_job(project_id, region,
@@ -66,25 +66,33 @@ def submit_batch_job(project_id, region,
         build = cloud_build_utils.get_build(project_id, build_id)
         build_status = cloud_build_utils.get_status_str(build.status)
         
-        progress = get_batch_job_status_str(build_id, build_status)
+        progress = get_batch_job_status_str(build_id=build_id, build_status=build_status)
         
         if build_status == 'SUCCESS':
             # TODO - launch vertex ai job
             print('foo')
+            job_error = None
             if job_id is None:
-                job_id = vertexai_utils.create_custom_job_sample(project_id, 
+                job_id, job_error = vertexai_utils.create_custom_job_sample(project_id, 
                     region, 
                     'stable-diffusion-batch-job', 
                     accelerator_type, 
                     gcs_folder, 
                     hf_token, image_uri)
+                if job_error is not None:
+                    progress = get_batch_job_status_str(build_id=build_id, build_status=build_status, job_error=job_error)
+                    yield """<center><h3 style="background-color:red;">Something went wrong</h1></center>""", progress
+                    return
             else:
                 job_status = vertexai_utils.get_custom_job_sample(project_id, job_id, region)
                 job_state = vertexai_utils.get_job_state_str(job_status.state.value)
-                progress = get_batch_job_status_str(build_id, build_status, job_state)
+                progress = get_batch_job_status_str(build_id=build_id, build_status=build_status, job_state=job_state)
                 if job_state == 'SUCCEEDED':
                     results_blob_uri = os.path.join(gcs_folder,'results.jsonl')
-                    progress = get_batch_job_status_str(build_id, build_status, job_state, results_blob_uri)
+                    progress = get_batch_job_status_str(build_id=build_id, 
+                                                        build_status=build_status, 
+                                                        job_state=job_state,
+                                                        results_blob_uri=results_blob_uri)
                     yield """<center><h3 style="background-color:green;">Job completed</h1></center>""", progress
                     return
                 elif (job_state == 'FAILED'
@@ -221,10 +229,7 @@ def cache_and_return_images(image_uris):
     return retval
 
 def load(metadata_file_uri):
-    bucket_name = metadata_file_uri.replace("gs://",'').split('/')[0]
-    metadata_uri = metadata_file_uri.replace(f"gs://{bucket_name}/",'')
-    bucket = storage_client.bucket(bucket_name)
-    metadata_blob = bucket.blob(metadata_uri)
+    metadata_blob = gcs_utils.get_blob(metadata_file_uri)
     if metadata_blob.exists():
         with metadata_blob.open("r") as f:
             metadata_contents = f.readlines()

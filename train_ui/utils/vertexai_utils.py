@@ -75,6 +75,14 @@ def create_custom_job_sample(
         },
     }
     parent = f"projects/{project_id}/locations/{location}"
-    response = client.create_custom_job(parent=parent, custom_job=custom_job)
-    print("response:", response)
-    return response.name.split('/')[-1]
+    error = None
+    try:
+        response = client.create_custom_job(parent=parent, custom_job=custom_job)
+        print("response:", response)
+    except Exception as e:
+        print('error:', e)
+        error = e
+    job_id = None
+    if error is None:
+        job_id = response.name.split('/')[-1]
+    return job_id, error
