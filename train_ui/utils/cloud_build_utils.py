@@ -31,15 +31,14 @@ def create_build(project_id,metadata_gcs_uri):
                 'build','-t',image_name,
                 '-f','serving-model-cards/stable-diffusion-batch-job/Dockerfile',
                 '--cache-from', image_name,
-                '.']
+                'serving-model-cards/stable-diffusion-batch-job/']
         }
     ]
 
     build.images = [image_name]
 
     operation = client.create_build(project_id=project_id, build=build)
-
-    return operation.metadata.build.id, 
+    return operation.metadata.build.id, image_name
 
 def get_build(project_id, job_id):
     # Create a client
@@ -53,10 +52,36 @@ def get_build(project_id, job_id):
 
     # Make the request
     response = client.get_build(request=request)
-    print(response)
     return response
 
 def get_status_str(status):
+    """
+    STATUS_UNKNOWN = 0;
+
+    // Build or step is queued; work has not yet begun.
+    QUEUED = 1;
+
+    // Build or step is being executed.
+    WORKING = 2;
+
+    // Build or step finished successfully.
+    SUCCESS = 3;
+
+    // Build or step failed to complete successfully.
+    FAILURE = 4;
+
+    // Build or step failed due to an internal cause.
+    INTERNAL_ERROR = 5;
+
+    // Build or step took longer than was allowed.
+    TIMEOUT = 6;
+
+    // Build or step was canceled by a user.
+    CANCELLED = 7;
+
+    // Build was enqueued for longer than the value of `queue_ttl`.
+    EXPIRED = 9;
+    """
     retval = 'STATUS_UNKNOWN'
     if status == 0:
         retval = 'STATUS_UNKNOWN'
@@ -78,28 +103,3 @@ def get_status_str(status):
         retval = 'EXPIRED'
     
     return retval
-    # STATUS_UNKNOWN = 0;
-
-    # // Build or step is queued; work has not yet begun.
-    # QUEUED = 1;
-
-    # // Build or step is being executed.
-    # WORKING = 2;
-
-    # // Build or step finished successfully.
-    # SUCCESS = 3;
-
-    # // Build or step failed to complete successfully.
-    # FAILURE = 4;
-
-    # // Build or step failed due to an internal cause.
-    # INTERNAL_ERROR = 5;
-
-    # // Build or step took longer than was allowed.
-    # TIMEOUT = 6;
-
-    # // Build or step was canceled by a user.
-    # CANCELLED = 7;
-
-    # // Build was enqueued for longer than the value of `queue_ttl`.
-    # EXPIRED = 9;

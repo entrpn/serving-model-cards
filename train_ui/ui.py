@@ -45,6 +45,6 @@ with gr.Blocks() as demo:
     # deploy_btn = gr.Button("deploy",)
 
     demo.load(_js=js())
-    
+
 demo.queue()
 demo.launch(share=False)

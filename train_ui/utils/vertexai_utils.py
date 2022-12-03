@@ -1,12 +1,46 @@
 from google.cloud import aiplatform
 
+def get_job_state_str(job_state):
+    job_state_dict = {
+        0 : 'UNSPECIFIED',
+        1 : 'QUEUED',
+        2 : 'PENDING',
+        3 : 'RUNNING',
+        4 : 'SUCCEEDED',
+        5 : 'FAILED',
+        6 : 'CANCELLING',
+        7 : 'CANCELLED',
+        8 : 'PAUSED',
+        9 : 'EXPIRED',
+        10 : 'UPDATING'
+    }
+    return job_state_dict.get(job_state,'UNSPECIFIED')
+
+def get_custom_job_sample(
+    project,
+    custom_job_id,
+    location
+):
+    api_endpoint = f"{location}-aiplatform.googleapis.com"
+    # The AI Platform services require regional API endpoints.
+    client_options = {"api_endpoint": api_endpoint}
+    # Initialize client that will be used to create and send requests.
+    # This client only needs to be created once, and can be reused for multiple requests.
+    client = aiplatform.gapic.JobServiceClient(client_options=client_options)
+    name = client.custom_job_path(
+        project=project, location=location, custom_job=custom_job_id
+    )
+    response = client.get_custom_job(name=name)
+    print("response:", response)
+    return response
+
 def create_custom_job_sample(
-    project_id, region, display_name, gpu_type, 
+    project_id, location, display_name, gpu_type, 
     gcs_output_dir, hf_token, image_uri, accelerator_count=1
 ):
 
     # The AI Platform services require regional API endpoints.
-    api_endpoint = f"{region}-aiplatform.googleapis.com"
+    api_endpoint = f"{location}-aiplatform.googleapis.com"
     client_options = {"api_endpoint": api_endpoint}
     # Initialize client that will be used to create and send requests.
     # This client only needs to be created once, and can be reused for multiple requests.
@@ -40,6 +74,7 @@ def create_custom_job_sample(
             "enable_web_access" : True
         },
     }
-    parent = f"projects/{project_id}/locations/{region}"
+    parent = f"projects/{project_id}/locations/{location}"
     response = client.create_custom_job(parent=parent, custom_job=custom_job)
     print("response:", response)
+    return response.name.split('/')[-1]
