@@ -24,14 +24,16 @@ RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESR
 RUN wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth -P experiments/pretrained_models
 RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P experiments/pretrained_models
 
-RUN pip install basicsr facexlib gfpgan
-RUN pip install -r requirements.txt
+RUN pip3 install basicsr facexlib gfpgan
+RUN pip3 install -r requirements.txt
 RUN python3 setup.py develop
 
 RUN pip3 install --no-cache-dir diffusers transformers datasets google-cloud-storage torch torchvision opencv-python
 
-COPY . .
+COPY load_weights .
 #load ERSGAN weights
 RUN python3 load_weights.py
+
+COPY . . 
 
 CMD ["python3", "main.py"]

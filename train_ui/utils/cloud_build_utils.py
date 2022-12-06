@@ -4,6 +4,12 @@ def create_build(project_id,metadata_gcs_uri):
     client = cloudbuild_v1.services.cloud_build.CloudBuildClient()
     build = cloudbuild_v1.Build()
 
+    options = cloudbuild_v1.BuildOptions()
+    options.machine_type = "E2_HIGHCPU_32"
+    options.disk_size_gb = "200"
+
+    build.options = options
+
     image_name = f'gcr.io/{project_id}/stable-diffusion-batch-job:latest'
 
     build.steps = [
@@ -17,7 +23,7 @@ def create_build(project_id,metadata_gcs_uri):
             'name' : 'google/cloud-sdk:alpine',
             'id' : 'Clone repo',
             'entrypoint' : 'git',
-            'args' : ['clone', 'https://github.com/entrpn/serving-model-cards.git']
+            'args' : ['clone', '-b','f/train_ui','https://github.com/entrpn/serving-model-cards.git']
         },
         {
             'name' : 'gcr.io/cloud-builders/gsutil',
