@@ -30,10 +30,8 @@ RUN python3 setup.py develop
 
 RUN pip3 install --no-cache-dir diffusers transformers datasets google-cloud-storage torch torchvision opencv-python
 
-COPY load_weights.py .
+COPY . .
 #load ERSGAN weights
 RUN python3 load_weights.py
-
-COPY . . 
 
 CMD ["python3", "main.py"]
