@@ -126,7 +126,7 @@ def load_last_job_entry():
                 prompt = entry.get('prompt')
                 if prompt is None or prompt == '':
                     continue
-                negative_prompt = entry.get('neg_prompt','')
+                negative_prompt = entry.get('negative_prompt','')
                 model_id = entry.get('model_id')
                 scheduler = entry.get('scheduler')
                 scale = entry.get('scale',7.5)
@@ -144,7 +144,7 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
         seed = global_batch_job_entry[7]
         entry = {
             "prompt" : global_batch_job_entry[0],
-            "neg_prompt" : global_batch_job_entry[1],
+            "negative_prompt" : global_batch_job_entry[1],
             "model_id" : global_batch_job_entry[2],
             "scheduler" : global_batch_job_entry[3],
             "scale" : global_batch_job_entry[4],
@@ -161,7 +161,7 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
 def append_batch_job_entry_n_cache(prompt, neg_prompt, model_id, scheduler, scale, steps, num_images, seed):
     entry = {
         "prompt" : prompt,
-        "neg_prompt" : neg_prompt,
+        "negative_prompt" : neg_prompt,
         "model_id" : model_id,
         "scheduler" : scheduler,
         "scale" : scale,
@@ -215,18 +215,25 @@ def load_image_params(x):
             selected.get('image_uris',''))
 
 def cache_and_return_images(image_uris):
-    retval = []
+    images = []
+    # if an image is deleted in the bucket, it needs to be reflected in load method.
+    ret_image_uris = []
     for image_uri in image_uris:
         image_filename = image_uri.split('/')[-1]
         local_image_uri = f'{LOCAL_SAVE_PATH}/{image_filename}'
         if exists(local_image_uri):
-            retval.append(Image.open(local_image_uri))
+            print(f"{local_image_uri} exists...")
+            images.append(Image.open(local_image_uri))
+            ret_image_uris.append(local_image_uri)
         else:
             if gcs_utils.get_blob(image_uri).exists():
+                print(f"downloading {image_uri}")
                 tmp_img = gcs_utils.read_image(gcs_utils.get_blob(image_uri))
                 tmp_img.save(local_image_uri)
-                retval.append(tmp_img)
-    return retval
+                images.append(tmp_img)
+                ret_image_uris.append(local_image_uri)
+
+    return images, ret_image_uris
 
 def load(metadata_file_uri):
     metadata_blob = gcs_utils.get_blob(metadata_file_uri)
@@ -237,11 +244,12 @@ def load(metadata_file_uri):
             for l in metadata_contents:
                 metadata_content = json.loads(l)
                 image_uris = metadata_content['image_uris']
+                images, image_uris = cache_and_return_images(image_uris)
+                tmp.extend(images)
                 for image_uri in image_uris:
                     metadata_content = json.loads(l)
                     metadata_content['image_uris'] = image_uri
                     global_metadata_contents.append(metadata_content)
-                tmp.extend(cache_and_return_images(image_uris))
             metadata_contents = tmp
     else:
         gr.Error("No file found")

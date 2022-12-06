@@ -7,10 +7,31 @@ RUN apt-get update && \
     apt install -y python3.8 && \
     apt-get -y install python3-pip
 
-RUN pip3 install --no-cache-dir diffusers transformers datasets google-cloud-storage torch torchvision
+RUN apt-get update && apt-get -y upgrade \
+  && apt-get install -y --no-install-recommends \
+    git \
+    wget \
+    g++ \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR 'stable-diffusion-batch-job'
+#cv2 dependencies
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
+RUN git clone https://github.com/xinntao/Real-ESRGAN.git
+WORKDIR "/Real-ESRGAN"
+RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.1.0/RealESRGAN_x4plus.pth -P experiments/pretrained_models
+RUN wget https://github.com/TencentARC/GFPGAN/releases/download/v1.3.0/GFPGANv1.3.pth -P experiments/pretrained_models
+RUN wget https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.2.4/RealESRGAN_x4plus_anime_6B.pth -P experiments/pretrained_models
+
+RUN pip install basicsr facexlib gfpgan
+RUN pip install -r requirements.txt
+RUN python3 setup.py develop
+
+RUN pip3 install --no-cache-dir diffusers transformers datasets google-cloud-storage torch torchvision opencv-python
 
 COPY . .
+#load ERSGAN weights
+RUN python3 load_weights.py
 
 CMD ["python3", "main.py"]
