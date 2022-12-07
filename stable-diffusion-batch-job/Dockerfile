@@ -35,6 +35,7 @@ COPY inference_realesrgan.py .
 #load ERSGAN weights
 RUN python3 load_weights.py
 
+COPY metadata.jsonl .
 COPY main.py .
 
 CMD ["python3", "main.py"]
