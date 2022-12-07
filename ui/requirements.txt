@@ -1,0 +1,4 @@
+gradio
+google-cloud-storage
+google-cloud-build
+google-cloud-aiplatform

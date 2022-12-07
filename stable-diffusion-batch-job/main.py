@@ -2,6 +2,8 @@ import json
 import uuid
 import os
 
+from inference_realesrgan import inference_realesrgan
+
 from diffusers import StableDiffusionPipeline
 from diffusers import (
     DDIMScheduler,
@@ -59,6 +61,9 @@ def get_scheduler(model_id, scheduler_name):
     
     return scheduler
 
+def enhance_imgs(enhance_dict, image_uris):
+    inference_realesrgan(image_uris, enhance_dict)
+
 def infer(key, lines):
     model_id, scheduler_name = key
     scheduler = get_scheduler(model_id, scheduler_name)
@@ -76,6 +81,7 @@ def infer(key, lines):
         scale = line.get('scale',7.5)
         seed = line.get('seed',None)
         num_inference_steps = line.get('num_inference_steps', 50)
+        enhance = line.get('enhance', None)
         
         generator = None
         if seed:
@@ -89,12 +95,20 @@ def infer(key, lines):
                      generator=generator).images
         print(len(images))
         image_uris = []
+        local_image_uris = []
         for image in images:
             uid = uuid.uuid4()
             local_filename = f"/tmp/{uid}.png" 
             image.save(local_filename)
+            local_image_uris.append(local_filename)
+        
+        if enhance:
+            enhance_imgs(enhance_dict=enhance, image_uris=local_image_uris)
+
+        for local_image_uri in local_image_uris:
+            uid = uuid.uuid4()
             blob = bucket.blob(f"{subfolders}{uid}.png")
-            blob.upload_from_filename(local_filename)
+            blob.upload_from_filename(local_image_uri)
             image_uris.append(f"gs://{bucket_name}/{subfolders}{uid}.png")
         
         line['image_uris'] = image_uris
