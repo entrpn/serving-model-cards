@@ -1,6 +1,9 @@
-# train-ui
+# UI
+<center>
+    <image src="../images/ui.png" width="512px">
+</center>
 
-Train UI is a gradio interface that you can run locally or in the cloud to train and deploy models using Vertex AI.
+UI is a gradio interface that you can use to run stable diffusion batch prediction jobs with different model types without writing any code.
 
 # Intro
 
