@@ -22,7 +22,7 @@ A collection of OSS models that are containerized and ready to be trained in GCP
 
 # misc
 
-A collection of different jobs.
+A collection of different jobs and features.
 
-| <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | More to come | More to come
+| <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | <a href="./ui"><p><center>UI for Stable Diffusion Batch Job</br><img src="./images/ui.png" width='512px'></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | More to come
 |-|-|-|
