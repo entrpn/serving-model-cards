@@ -9,7 +9,7 @@ from PIL import Image
 
 from utils import gcs_utils, cloud_build_utils, vertexai_utils, cache_utils
 from css_and_js import call_js
-from constants import LOCAL_SAVE_PATH, MODELS
+from constants import LOCAL_SAVE_PATH, MODELS, MODEL_DICT
 
 global_metadata_contents = []
 
@@ -67,8 +67,6 @@ def submit_batch_job(project_id, region,
         progress = get_batch_job_status_str(build_id=build_id, build_status=build_status)
         
         if build_status == 'SUCCESS':
-            # TODO - launch vertex ai job
-            print('foo')
             job_error = None
             if job_id is None:
                 job_id, job_error = vertexai_utils.create_custom_job_sample(project_id, 
@@ -125,7 +123,7 @@ def load_last_job_entry():
                 enhance = entry.get("enhance")
                 if enhance is None:
                     enhance = {'model_id' : "None", 'face_enhance' : False, 'outscale' : 2}
-                    
+
                 prompt = entry.get('prompt')
                 if prompt is None or prompt == '':
                     continue
@@ -151,6 +149,14 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
     
     for global_batch_job_entry in global_batch_job_entries:
         seed = global_batch_job_entry[7]
+
+        enhance = None
+        if global_batch_job_entry[8] != "None":
+            enhance = {
+                "model_id" : global_batch_job_entry[8], 
+                "face_enhance" : global_batch_job_entry[9],
+                "outscale" : global_batch_job_entry[10]
+            }
         entry = {
             "prompt" : global_batch_job_entry[0],
             "negative_prompt" : global_batch_job_entry[1],
@@ -160,11 +166,7 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
             "steps" : global_batch_job_entry[5],
             "num_images" : global_batch_job_entry[6],
             "seed" : seed if seed != -1 else None,
-            "enhance" : {
-                "model_id" : global_batch_job_entry[8],
-                "face_enhance" : global_batch_job_entry[9],
-                "outscale" : global_batch_job_entry[10]
-                }
+            "enhance" : enhance
         }
         with open(LOCAL_METADATA_PATH,'a+') as f:
             f.write(f'{json.dumps(entry)}\n')
@@ -207,7 +209,10 @@ def edit_batch_job_entry(prompt, neg_prompt, model_id,
             scheduler, scale, steps, num_images, seed,
             enhanced_model, enhanced_face_restore,
             enhanced_scale):
-    seed = int(seed)
+    if seed is not None:
+        seed = int(seed)
+    else:
+        seed = -1
     scale = float(scale)
     num_images = int(num_images)
     global_batch_job_entries[global_batch_job_dataset_idx[0]] = [prompt, neg_prompt, model_id, 
@@ -319,9 +324,6 @@ def view_creations():
                 creations_scale = gr.Textbox(label='Scale')
                 creations_seed = gr.Textbox(label='Seed')
                 creations_image_uri = gr.Textbox(label='Image uri')
-                # creations_enhanced_model = gr.Dropdown(label='Enhancement model id',value='None',choices=['None','RealESRGAN_x4plus','RealESRGAN_x4plus_anime_6B'])
-                # creations_enhanced_face_restore = gr.Dropdown(label='Enhancement face restore', value=False,choices=[True,False])
-                # creations_enhanced_scale = gr.Textbox(label='Image scaling')
             with gr.Column(scale=2):
                 creations_gallery = gr.Gallery(label='Images', elem_id='creations_gallery').style(grid=[4, 4])
                 view_params_btn = gr.Button('View Parameters')
@@ -368,9 +370,10 @@ def view_creations():
                             batch_job_enhanced_model = gr.Dropdown(label='Enhancement model id',value='None',choices=['None','RealESRGAN_x4plus','RealESRGAN_x4plus_anime_6B'])
                             batch_job_enhanced_face_restore = gr.Dropdown(label='Enhancement face restore (Works if Enhancement model id is set)', value=False,choices=[True,False])
                             batch_job_enhanced_scale = gr.Dropdown(label='Image upscaling (Works if Enhancement model id is set)',value=2,choices=[2,4])
-                        batch_job_model_id = gr.Textbox(label='Model id', value='CompVis/stable-diffusion-v1-4')
-                            #batch_job_model_id = gr.Dropdown(label='Model id', value='CompVis/stable-diffusion-v1-4', choices=MODELS)
-                            #batch_job_model_id_custom = gr.Textbox("", label="Model id (custom) - overrides dropdown selection on the left.")
+                        with gr.Row():
+                            batch_job_model_id = gr.Textbox(label='Model id', value='CompVis/stable-diffusion-v1-4')
+                            batch_job_model_id_dropdown = gr.Dropdown(label='You can select a model from this list to autopopulate model id.', value='CompVis/stable-diffusion-v1-4',choices=MODELS)
+                            batch_job_model_id_description = gr.Markdown("Model description")
                         batch_job_scheduler = gr.Dropdown(['DDIMScheduler','DPMSolverMultistepScheduler', 'EulerAncestralDiscreteScheduler',
                             'EulerDiscreteScheduler','LMSDiscreteScheduler','PNDMScheduler'], value='DDIMScheduler', label="Scheduler")
                         batch_job_steps = gr.Textbox("50", label="Steps")
@@ -403,6 +406,16 @@ def view_creations():
                 submit_batch_prediction_job_btn = gr.Button('Submit job')
                 submit_batch_prediction_job_error_code = gr.HTML()
                 submit_batch_prediction_job_id = gr.Textbox(visible=True,show_label=False)
+        
+        def batch_job_model_id_dropdown_change(x):
+            print(x)
+            return x, MODEL_DICT[x]
+
+        batch_job_model_id_dropdown.change(
+            batch_job_model_id_dropdown_change,
+            batch_job_model_id_dropdown,
+            [batch_job_model_id, batch_job_model_id_description]
+        )
     
         def batch_job_dataset_click(x):
             print("entry index: ",x)
@@ -442,7 +455,8 @@ def view_creations():
         edit_batch_job_entry_btn.click(
             edit_batch_job_entry,
             [batch_job_prompt, batch_job_neg_prompt, batch_job_model_id,
-            batch_job_scheduler, batch_job_scale, batch_job_steps, batch_job_num_images, batch_job_seed],
+            batch_job_scheduler, batch_job_scale, batch_job_steps, batch_job_num_images, batch_job_seed,
+            batch_job_enhanced_model, batch_job_enhanced_face_restore, batch_job_enhanced_scale],
             batch_job_dataset
         )
         delete_batch_job_entry_btn.click(
