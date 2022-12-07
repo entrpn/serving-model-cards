@@ -1,6 +1,6 @@
 # UI
 <center>
-    <image src="../images/ui.png" width="512px">
+    <image src="../images/ui_large.png">
 </center>
 
 UI is a gradio interface that you can use to run stable diffusion batch prediction jobs with different model types without writing any code.
