@@ -23,7 +23,7 @@ def create_build(project_id,metadata_gcs_uri):
             'name' : 'google/cloud-sdk:alpine',
             'id' : 'Clone repo',
             'entrypoint' : 'git',
-            'args' : ['clone', '-b','f/train_ui','https://github.com/entrpn/serving-model-cards.git']
+            'args' : ['clone', 'https://github.com/entrpn/serving-model-cards.git']
         },
         {
             'name' : 'gcr.io/cloud-builders/gsutil',

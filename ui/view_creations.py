@@ -305,32 +305,23 @@ def load(metadata_file_uri):
 def view_creations():
     load_ui_values()
     with gr.Blocks():
-        gr.Markdown("""View and create batch. If you haven't yet, you can create a job below.""")
+        with gr.Accordion(""):
+            gr.Markdown("""
+            This GUI uses [Google Cloud Platform](https://cloud.google.com/) to deploy stable diffusion jobs to generate images. There are two sections, `View your job` and `Create a job`. 
+            
+            First you'll create a job through the `Create a job` section, which it will deploy it to GCP's AIML platform, Vertex AI. Once the job is complete, you'll receive a Google Cloud Storage url that you can paste in the `View your job` section to load your generations and view their parameters.
+
+            **Features**
+            - Generate images using various models uploaded to HuggingFace in the same job. Currently only diffusers models are supported (ckpt models coming soon).
+            - Face enhancement.
+            - Upscaling
+            """)
         with gr.Row():
-            metadata_file_uri = gr.Textbox(global_ui_values.get('metadata_file_uri',''), label='Metadata uri',placeholder="gs://bucket-name/sd-predictions/results.jsonl")
-            load_metadata_file_btn = gr.Button("Load")
-        with gr.Row():
-            creations_prompt = gr.Textbox(label='Prompt')
-            creations_neg_prompt = gr.Textbox(label='Negative prompt')
-        with gr.Row(label="Enhancements"):
-            creations_enhanced_model = gr.Dropdown(label='Enhancement model id',value='None',choices=['None','RealESRGAN_x4plus','RealESRGAN_x4plus_anime_6B'])
-            creations_enhanced_face_restore = gr.Dropdown(label='Enhancement face restore', value=False,choices=[True,False])
-            creations_enhanced_scale = gr.Textbox(label='Image upscaling')
-        with gr.Row():
-            with gr.Column():
-                creations_model_id = gr.Textbox(label='Model id')
-                creations_scheduler = gr.Textbox(label='Scheduler')
-                creations_num_inference_steps = gr.Textbox(label='Steps')
-                creations_scale = gr.Textbox(label='Scale')
-                creations_seed = gr.Textbox(label='Seed')
-                creations_image_uri = gr.Textbox(label='Image uri')
-            with gr.Column(scale=2):
-                creations_gallery = gr.Gallery(label='Images', elem_id='creations_gallery').style(grid=[4, 4])
-                view_params_btn = gr.Button('View Parameters')
-        
-        with gr.Row():
-            with gr.Accordion("Create a job"):
+            with gr.Accordion(""):
                 gr.Markdown("""
+
+                ## Create a job
+
                 You can create a batch job with your favorite stable diffusion models here! 
 
                 This uses GCP resources as follows:
@@ -407,9 +398,40 @@ def view_creations():
                 submit_batch_prediction_job_error_code = gr.HTML()
                 submit_batch_prediction_job_id = gr.Textbox(visible=True,show_label=False)
         
+        with gr.Accordion(""):
+            gr.Markdown("""
+            ## View your job
+
+            Once you've run a job, you'll see a gcs url in the logs (shown below the `Submit Job`). Take that url and paste in in the `Metadata uri` field below and click the `Load` button. Depending on the number of generations, this can take from 1 to 10 minutes as the UI downloads and caches the images.
+
+            Once the images are loaded, you can click on the gallery to zoom into each image and click the `View Parameters` button to view the parameters that were used to generate the images.
+
+            """)
+            with gr.Row():
+                metadata_file_uri = gr.Textbox(global_ui_values.get('metadata_file_uri',''), label='Metadata uri',placeholder="gs://bucket-name/sd-predictions/results.jsonl")
+                load_metadata_file_btn = gr.Button("Load")
+            with gr.Row():
+                creations_prompt = gr.Textbox(label='Prompt')
+                creations_neg_prompt = gr.Textbox(label='Negative prompt')
+            with gr.Row(label="Enhancements"):
+                creations_enhanced_model = gr.Dropdown(label='Enhancement model id',value='None',choices=['None','RealESRGAN_x4plus','RealESRGAN_x4plus_anime_6B'])
+                creations_enhanced_face_restore = gr.Dropdown(label='Enhancement face restore', value=False,choices=[True,False])
+                creations_enhanced_scale = gr.Textbox(label='Image upscaling')
+            with gr.Row():
+                with gr.Column():
+                    creations_model_id = gr.Textbox(label='Model id')
+                    creations_scheduler = gr.Textbox(label='Scheduler')
+                    creations_num_inference_steps = gr.Textbox(label='Steps')
+                    creations_scale = gr.Textbox(label='Scale')
+                    creations_seed = gr.Textbox(label='Seed')
+                    creations_image_uri = gr.Textbox(label='Image uri')
+                with gr.Column(scale=2):
+                    creations_gallery = gr.Gallery(label='Images', elem_id='creations_gallery').style(grid=[4, 4])
+                    view_params_btn = gr.Button('View Parameters')
+
         def batch_job_model_id_dropdown_change(x):
             print(x)
-            return x, MODEL_DICT[x]
+            return x, f'Model description : {MODEL_DICT[x]}'
 
         batch_job_model_id_dropdown.change(
             batch_job_model_id_dropdown_change,
