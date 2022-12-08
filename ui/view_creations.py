@@ -232,7 +232,6 @@ def add_batch_job_entry(prompt, neg_prompt, model_id,
             seed = -1
         scale = float(scale)
         num_images = int(num_images)
-        print('seed:',seed)
         append_batch_job_entry_n_cache(prompt,
                 neg_prompt, model_id, scheduler, 
                 scale, steps, num_images, seed,
@@ -245,7 +244,9 @@ def add_batch_job_entry(prompt, neg_prompt, model_id,
 def load_image_params(x):
     idx = x[1]
     selected = global_metadata_contents[idx]
-    enhanced = selected.get('enhance',{'model_id' : "None", 'face_enhance' : False, 'outscale' : 1})
+    enhanced = selected.get('enhance')
+    if enhanced is None:
+        enhanced = {'model_id' : "None", 'face_enhance' : False, 'outscale' : 1}
     return (selected.get('prompt'), 
             selected.get('negative_prompt',''),
             selected.get('scale',7.5),
