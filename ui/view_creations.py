@@ -153,11 +153,11 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
         seed = global_batch_job_entry[7]
 
         enhance = None
-        if global_batch_job_entry[8] != "None":
+        if global_batch_job_entry[10] != "None":
             enhance = {
-                "model_id" : global_batch_job_entry[8], 
-                "face_enhance" : global_batch_job_entry[9],
-                "outscale" : global_batch_job_entry[10]
+                "model_id" : global_batch_job_entry[10], 
+                "face_enhance" : global_batch_job_entry[11],
+                "outscale" : global_batch_job_entry[12]
             }
         entry = {
             "prompt" : global_batch_job_entry[0],
@@ -167,6 +167,8 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
             "scale" : global_batch_job_entry[4],
             "steps" : global_batch_job_entry[5],
             "num_images" : global_batch_job_entry[6],
+            "width" : global_batch_job_entry[7],
+            "height" : global_batch_job_entry[8],
             "seed" : seed if seed != -1 else None,
             "enhance" : enhance
         }
@@ -461,6 +463,7 @@ def view_creations():
     
         def batch_job_dataset_click(x):
             print("entry index: ",x)
+            print("clicked entry:", global_batch_job_entries[x])
             global_batch_job_dataset_idx[0] = x
             return global_batch_job_entries[x]
 
