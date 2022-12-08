@@ -80,6 +80,8 @@ def infer(key, lines):
         num_images = line.get('num_images',4)
         scale = line.get('scale',7.5)
         seed = line.get('seed',None)
+        width = line.get('width', 512)
+        height = line.get('height', 512)
         num_inference_steps = line.get('num_inference_steps', 50)
         enhance = line.get('enhance', None)
         
@@ -91,6 +93,8 @@ def infer(key, lines):
                      negative_prompt=negative_prompt, 
                      num_images_per_prompt=num_images, 
                      guidance_scale=scale, 
+                     width=width,
+                     height=height,
                      num_inference_steps=num_inference_steps,
                      generator=generator).images
         print(len(images))

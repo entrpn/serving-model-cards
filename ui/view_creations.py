@@ -135,12 +135,14 @@ def load_last_job_entry():
                 steps = entry.get('steps',50)
                 num_images = entry.get('num_images')
                 seed = entry.get('seed',-1)
+                width = entry.get('width', 512)
+                height = entry.get('height', 512)
                 enhance_model_id = enhance.get('model_id','None')
                 face_enhance = enhance.get('face_enhance')
                 outscale = enhance.get('outscale')
 
                 global_batch_job_entries.append([prompt, negative_prompt, model_id, 
-                    scheduler, scale, steps, num_images, seed, enhance_model_id, face_enhance, outscale])
+                    scheduler, scale, steps, num_images, seed, width, height, enhance_model_id, face_enhance, outscale])
     return global_batch_job_entries
 
 def update_batch_job_entry_n_cache(global_batch_job_entries):
@@ -175,7 +177,8 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
     
 
 def append_batch_job_entry_n_cache(prompt, neg_prompt, model_id, scheduler, 
-    scale, steps, num_images, seed, enhanced_model, enhanced_face_restore, enhanced_scale):
+    scale, steps, num_images, seed, width, height, enhanced_model, 
+    enhanced_face_restore, enhanced_scale):
     enhance = None
     if enhanced_model != "None":
         enhance = {
@@ -192,12 +195,14 @@ def append_batch_job_entry_n_cache(prompt, neg_prompt, model_id, scheduler,
         "steps" : steps,
         "num_images" : num_images,
         "seed" : seed,
+        "width" : width,
+        "height" : height,
         "enhance" : enhance
         }
     with open(LOCAL_METADATA_PATH,'a+') as f:
         f.write(f'{json.dumps(entry)}\n')
     global_batch_job_entries.append([prompt, neg_prompt, model_id, scheduler, scale, 
-        steps, num_images, seed, enhanced_model, enhanced_face_restore, enhanced_scale])
+        steps, num_images, seed, width, height, enhanced_model, enhanced_face_restore, enhanced_scale])
     return global_batch_job_entries
 
 
@@ -207,6 +212,7 @@ def delete_batch_job_entry():
 
 def edit_batch_job_entry(prompt, neg_prompt, model_id,
             scheduler, scale, steps, num_images, seed,
+            width, height,
             enhanced_model, enhanced_face_restore,
             enhanced_scale):
     if seed is not None:
@@ -216,13 +222,13 @@ def edit_batch_job_entry(prompt, neg_prompt, model_id,
     scale = float(scale)
     num_images = int(num_images)
     global_batch_job_entries[global_batch_job_dataset_idx[0]] = [prompt, neg_prompt, model_id, 
-        scheduler, scale, steps, num_images, seed, enhanced_model, enhanced_face_restore,
+        scheduler, scale, steps, num_images, seed, width, height, enhanced_model, enhanced_face_restore,
         enhanced_scale]
     return update_batch_job_entry_n_cache(global_batch_job_entries)
 
 def add_batch_job_entry(prompt, neg_prompt, model_id,
-            scheduler, scale, steps, num_images, seed,
-            enhanced_model, enhanced_face_restore,
+            scheduler, scale, steps, num_images, seed, 
+            width, height, enhanced_model, enhanced_face_restore,
             enhanced_scale):
     error_message = ""
     if prompt is not None and len(prompt) > 0:
@@ -235,6 +241,7 @@ def add_batch_job_entry(prompt, neg_prompt, model_id,
         append_batch_job_entry_n_cache(prompt,
                 neg_prompt, model_id, scheduler, 
                 scale, steps, num_images, seed,
+                width, height,
                 enhanced_model, enhanced_face_restore, enhanced_scale)
     else:
         error_message = """<center><h3 style="background-color:red;">Prompt cannot be empty</h1></center>"""
@@ -254,6 +261,8 @@ def load_image_params(x):
             selected.get('scheduler','DDIMScheduler'),
             selected.get('model_id',''),
             selected.get('seed',-1),
+            selected.get('width', 512),
+            selected.get('height', 512),
             selected.get('image_uris',''),
             enhanced.get('model_id'),
             enhanced.get('face_enhance'),
@@ -283,6 +292,8 @@ def cache_and_return_images(image_uris):
 
 def load(metadata_file_uri):
     metadata_blob = gcs_utils.get_blob(metadata_file_uri)
+    metadata_contents = []
+    error = ''
     if metadata_blob.exists():
         cache_utils.save_ui_values(UI_VALS_CACHE,metadata_file_uri=metadata_file_uri)
         with metadata_blob.open("r") as f:
@@ -299,9 +310,9 @@ def load(metadata_file_uri):
                     global_metadata_contents.append(metadata_content)
             metadata_contents = tmp
     else:
-        gr.Error("No file found")
+        error = "<center><h3 style=\"background-color:red;\">Metadata file doesn't exist</h1></center>"
     
-    return metadata_contents
+    return metadata_contents, error
 
 def view_creations():
     load_ui_values()
@@ -372,6 +383,8 @@ def view_creations():
                         batch_job_scale = gr.Textbox("7.5", label="Scale")
                         batch_job_num_images = gr.Textbox("4", label="Number of images to generate (batch). If too large, the GPU might run out of memory.")
                         batch_job_seed = gr.Textbox("-1", label="Seed (defaults to random)")
+                        batch_job_width = gr.Dropdown([512, 768], value="512", label="Width")
+                        batch_job_height = gr.Dropdown([512, 768], value="512", label="Height")
                         with gr.Row():
                             add_batch_job_entry_btn = gr.Button('Add entry')
                             edit_batch_job_entry_btn = gr.Button('Edit entry')
@@ -388,12 +401,14 @@ def view_creations():
                             batch_job_steps, 
                             batch_job_num_images,
                             batch_job_seed,
+                            batch_job_width,
+                            batch_job_height,
                             batch_job_enhanced_model,
                             batch_job_enhanced_face_restore,
                             batch_job_enhanced_scale
                         ],
                         headers = ['Prompt', 'Negative prompt', 'Model id', 
-                            'Scheduler', 'Scale', 'Steps', 'Num. images', 'Seed',
+                            'Scheduler', 'Scale', 'Steps', 'Num. images', 'Seed','W','H',
                             'Enhance model','Enhance face restore','Enhance scale'])
                 submit_batch_prediction_job_btn = gr.Button('Submit job')
                 submit_batch_prediction_job_error_code = gr.HTML()
@@ -412,6 +427,8 @@ def view_creations():
                 metadata_file_uri = gr.Textbox(global_ui_values.get('metadata_file_uri',''), label='Metadata uri',placeholder="gs://bucket-name/sd-predictions/results.jsonl")
                 load_metadata_file_btn = gr.Button("Load")
             with gr.Row():
+                view_creations_error = gr.HTML()
+            with gr.Row():
                 creations_prompt = gr.Textbox(label='Prompt')
                 creations_neg_prompt = gr.Textbox(label='Negative prompt')
             with gr.Row(label="Enhancements"):
@@ -425,6 +442,8 @@ def view_creations():
                     creations_num_inference_steps = gr.Textbox(label='Steps')
                     creations_scale = gr.Textbox(label='Scale')
                     creations_seed = gr.Textbox(label='Seed')
+                    creations_width = gr.Textbox(label='Width')
+                    creations_height = gr.Textbox(label='Height')
                     creations_image_uri = gr.Textbox(label='Image uri')
                 with gr.Column(scale=2):
                     creations_gallery = gr.Gallery(label='Images', elem_id='creations_gallery').style(grid=[4, 4])
@@ -450,20 +469,20 @@ def view_creations():
             inputs = batch_job_dataset,
             outputs = [batch_job_prompt, batch_job_neg_prompt, batch_job_model_id,
             batch_job_scheduler, batch_job_scale, batch_job_steps, batch_job_num_images,
-            batch_job_seed, batch_job_enhanced_model, batch_job_enhanced_face_restore,
-            batch_job_enhanced_scale])
+            batch_job_seed, batch_job_width, batch_job_height, batch_job_enhanced_model, 
+            batch_job_enhanced_face_restore, batch_job_enhanced_scale])
 
         load_metadata_file_btn.click(
                 load,
                 [metadata_file_uri],
-                outputs=creations_gallery
+                outputs=[creations_gallery, view_creations_error]
             )
         view_params_btn.click(
             load_image_params,
             creations_gallery,
             [creations_prompt, creations_neg_prompt, creations_scale, 
             creations_num_inference_steps, creations_scheduler, creations_model_id,
-            creations_seed, creations_image_uri, creations_enhanced_model, creations_enhanced_face_restore,
+            creations_seed, creations_width, creations_height, creations_image_uri, creations_enhanced_model, creations_enhanced_face_restore,
             creations_enhanced_scale],
             _js=call_js("getGallerySelectedItem",element_id="creations_gallery")
         )
@@ -472,6 +491,7 @@ def view_creations():
             add_batch_job_entry,
             [batch_job_prompt, batch_job_neg_prompt, batch_job_model_id,
             batch_job_scheduler, batch_job_scale, batch_job_steps, batch_job_num_images, batch_job_seed,
+            batch_job_width, batch_job_height,
             batch_job_enhanced_model, batch_job_enhanced_face_restore, batch_job_enhanced_scale],
             [batch_job_dataset, submit_batch_prediction_job_error_code]
         )
@@ -479,6 +499,7 @@ def view_creations():
             edit_batch_job_entry,
             [batch_job_prompt, batch_job_neg_prompt, batch_job_model_id,
             batch_job_scheduler, batch_job_scale, batch_job_steps, batch_job_num_images, batch_job_seed,
+            batch_job_width, batch_job_height,
             batch_job_enhanced_model, batch_job_enhanced_face_restore, batch_job_enhanced_scale],
             batch_job_dataset
         )
