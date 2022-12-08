@@ -167,9 +167,9 @@ def update_batch_job_entry_n_cache(global_batch_job_entries):
             "scale" : global_batch_job_entry[4],
             "steps" : global_batch_job_entry[5],
             "num_images" : global_batch_job_entry[6],
-            "width" : global_batch_job_entry[7],
-            "height" : global_batch_job_entry[8],
             "seed" : seed if seed != -1 else None,
+            "width" : global_batch_job_entry[8],
+            "height" : global_batch_job_entry[9],
             "enhance" : enhance
         }
         with open(LOCAL_METADATA_PATH,'a+') as f:
