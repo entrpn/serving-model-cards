@@ -90,7 +90,7 @@ def infer(key, lines):
         images = pipe(prompt, 
                      negative_prompt=negative_prompt, 
                      num_images_per_prompt=num_images, 
-                     scale=scale, 
+                     guidance_scale=scale, 
                      num_inference_steps=num_inference_steps,
                      generator=generator).images
         print(len(images))
