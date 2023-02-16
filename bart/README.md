@@ -36,11 +36,10 @@ You'll need to enable Vertex AI and have authenticated with a service account th
 
     ```bash
     gcloud auth configure-docker
-    docker build . -t gcr.io/{project_id}/bart:latest
     docker push gcr.io/{project_id}/bart:latest
     ```
   
- 1. Deploy in Vertex AI Endpoints.
+1. Deploy in Vertex AI Endpoints.
 
     ```bash
     python ../gcp_deploy.py --image-uri gcr.io/<project_id>/bart:latest --accelerator-count 0 --model-name bart --endpoint-name bart-endpoint --endpoint-deployed-name bart-deployed-name
