@@ -26,3 +26,8 @@ A collection of different jobs and features.
 
 | <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | <a href="./ui"><p><center>UI for Stable Diffusion Batch Job</br><img src="./images/ui.png" width='512px'></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | More to come
 |-|-|-|
+
+# How to guides
+
+- Stable diffusion how to guides
+    - [Convert original sd checkpoint to diffusers](./stable-diffusion-how-tos/convert-sd-checkpoint-to-diffusers)
