@@ -9,7 +9,7 @@ This guide uses the `diffusers` library to convert an original stable diffusion 
 1. Install dependencies
 
     ```bash
-    pip install omegaconf safetensors diffusers
+    pip install omegaconf safetensors diffusers transformers torch
     ```
 
 1. Download the model checkpoint you would like to convert. In this example, we'll use a checkpoint from [civitai](https://civitai.com/). Choose any model that you're interested in and download it.

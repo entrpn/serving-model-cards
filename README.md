@@ -31,3 +31,4 @@ A collection of different jobs and features.
 
 - Stable diffusion how to guides
     - [Convert original sd checkpoint to diffusers](./stable-diffusion-how-tos/convert-sd-checkpoint-to-diffusers)
+    - [Merge checkpoints](./stable-diffusion-how-tos/checkpoint-merging)
