@@ -78,7 +78,7 @@ backtorgb = cv2.cvtColor(gray,cv2.COLOR_GRAY2RGB)
 cv2.imwrite("mask.png",backtorgb)
 print("gray.shape:",backtorgb.shape)
 
-pipe = DiffusionPipeline.from_pretrained("", custom_pipeline="stable_diffusion_mega", torch_dtype=torch.float32)
+pipe = DiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", custom_pipeline="stable_diffusion_mega", torch_dtype=torch.float32)
 pipe.to("cuda")
 pipe.enable_attention_slicing()
 
