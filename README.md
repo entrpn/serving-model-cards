@@ -24,7 +24,7 @@ A collection of OSS models that are containerized and ready to be trained in GCP
 
 A collection of different jobs and features.
 
-| <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | <a href="./ui"><p><center>UI for Stable Diffusion Batch Job</br><img src="./images/ui.png" width='512px'></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | More to come
+| <a href="./stable-diffusion-batch-job"><p><center>Stable Diffusion Batch Job</br><img src="./images/sd_batch_job.png"></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | <a href="./ui"><p><center>UI for Stable Diffusion Batch Job</br><img src="./images/ui.png" width='512px'></img><br>Create a batch job with different styles </br>of stable diffusion</br></center></p></a> | <a href="./image-captioning-dataflow"><p><center>Large Scale Image Captioning with Dataflow</br><img src="./images/blip.jpeg" width='512px'></img><br>Caption millions of images at scale </br>using Dataflow</br></center></p></a>
 |-|-|-|
 
 # How to guides
