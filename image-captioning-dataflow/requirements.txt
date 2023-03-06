@@ -1,0 +1,8 @@
+git+https://github.com/huggingface/transformers.git
+gdown
+timm==0.4.12
+ftfy==6.1.1
+spacy==3.4.1
+fairscale==0.4.4
+apache_beam[gcp]>=2.45.0
+tensorflow
