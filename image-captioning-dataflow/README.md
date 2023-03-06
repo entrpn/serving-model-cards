@@ -80,12 +80,19 @@ Features:
     gs://${BUCKET_ID}/$PREFIX/metadata.jsonl
     ```
 
-1. Run the dataflow job. First, you'll need a service account with `Dataflow Admin`, `Dataflow Worker` and `Compute Network User`. You can either use the default service account or create a new service account. Furthermore, if you are on the default network that comes with your project, you can ommit `--subnetwork`. If you're using the default service account, you can ommit `--service_account_email`. In the following snippet, I'm using a custom service account and a VPC network. Make sure you set <project-id> to yours and if you're using the same `--temp_location`, create a bucket `$PROJECT_ID-bucket`.
+1. We'll be using a custom container to run our Dataflow job. Build and push the container. Make sure you set <project-id> to yours
+
+    ```bash
+    export PROJECT_ID=<project-id>
+    docker build . -t gcr.io/$PROJECT_ID/dataflow-captioning:latest
+    docker push gcr.io/$PROJECT_ID/dataflow-captioning:latest
+    ```
+
+1. Run the dataflow job. First, you'll need a service account with `Dataflow Admin`, `Dataflow Worker` and `Compute Network User`. You can either use the default service account or create a new service account. Furthermore, if you are on the default network that comes with your project, you can ommit `--subnetwork`. If you're using the default service account, you can ommit `--service_account_email`. In the following snippet, I'm using a custom service account and a VPC network. If you're using the same `--temp_location` as the command below, make sure to create a bucket `$PROJECT_ID-bucket`.
 
     This job uses a T4 GPU.
 
     ```bash
-    export PROJECT_ID=<project-id>
     python pipeline.py \
     --dataset-filename gs://$BUCKET_ID/$PREFIX/dataset.txt \
     --output-filename gs://$BUCKET_ID/$PREFIX/metadata.jsonl \
@@ -94,7 +101,7 @@ Features:
     --region=us-central1 \
     --job_name=captioning \
     --temp_location=gs://$PROJECT_ID-bucket/ \
-    --sdk_container_image=gcr.io/jfacevedo-demos/dataflow-captioning:latest \
+    --sdk_container_image=gcr.io/$PROJECT_ID/dataflow-captioning:latest \
     --machine_type=n1-standard-16 \
     --experiment="worker_accelerator=type:nvidia-tesla-t4;count:1;install-nvidia-driver" \
     --experiment=use_runner_v2 \
