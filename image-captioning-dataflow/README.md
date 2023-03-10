@@ -29,7 +29,7 @@ Features:
 
     ```bash
     git clone https://github.com/salesforce/BLIP
-    export PYTHONPATH:$PYTHONPATH:<your-blip-location>/BLIP
+    export PYTHONPATH=$PYTHONPATH:<your-blip-location>/BLIP
     gdown 'https://storage.googleapis.com/sfr-vision-language-research/BLIP/models/model*_base_caption.pth'
     python load_blip_weights.py
     ```
