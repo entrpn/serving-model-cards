@@ -6,3 +6,4 @@ spacy==3.4.1
 fairscale==0.4.4
 apache_beam[gcp]>=2.45.0
 tensorflow
+google-cloud-storage
