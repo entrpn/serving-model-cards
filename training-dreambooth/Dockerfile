@@ -10,8 +10,8 @@ RUN echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] http://packages.c
 
 
 RUN pip install "jax[tpu]>=0.2.16" -f https://storage.googleapis.com/jax-releases/libtpu_releases.html
-RUN pip install tensorflow==2.9.2
-RUN pip install transformers diffusers flax optax torch torchvision ftfy tensorboard modelcards
+RUN pip install git+https://github.com/huggingface/diffusers.git
+RUN pip install transformers flax optax torch torchvision ftfy tensorboard modelcards
 
 # Like nvidia-smi for TPUs.
 RUN apt-get update && \

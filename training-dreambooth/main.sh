@@ -1,4 +1,15 @@
 #!/bin/bash
+
+echo "model name: $MODEL_NAME"
+echo "resolution: $RESOLUTION"
+echo "batch size : $BATCH_SIZE"
+echo "learning rate : $LEARNING_RATE"
+echo "max train steps : $MAX_TRAIN_STEPS"
+echo "num class images : $NUM_CLASS_IMAGES"
+echo "prior loss weight: $PRIOR_LOSS_WEIGHT"
+echo "HF TOKEN: $HF_TOKEN"
+echo "class-prompt : $CLASS_PROMPT"
+echo "instance-prompt : $INSTANCE_PROMPT"
 python3 train.py --pretrained_model_name_or_path=$MODEL_NAME \
     --instance_data_dir=images \
     --output_dir=/tmp/sd-model-output \
