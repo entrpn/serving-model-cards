@@ -712,6 +712,7 @@ def main():
         checkpoint()
         gcs_path = os.getenv('GCS_OUTPUT_DIR')
         subprocess.call(f'/bin/sh /usr/bin/gsutil -m cp -r {args.output_dir} {gcs_path}', shell=True)
+        print("Job done, files uploaded!")
 
 
         if args.push_to_hub:
