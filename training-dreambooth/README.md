@@ -35,4 +35,5 @@ Features:
         --class-prompt="A photo of a man" \
         --max-train-steps=800
     ```
+    
 1. Once your job is finished, the model will be uploaded to `gcs-output-dir`. You can use it in a GCP TPU-VM or Colab. Take a look at the `infer_jax.py` script for an example of how to create images.
