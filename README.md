@@ -9,7 +9,7 @@ By using Vertex AI endpoints, users don't need to manage complex infrastructure 
 
 <center><b>Make sure to read the permissable license for each model before use!!</b></center>
 
-| <a href="./stable-diffusion"><p><center>Stable Diffusion<img src="./images/sd.png"></img><br>Generate images from a text prompt</br></center></p></a>| <a href="./serving-flant5"><p><center>FLAN-T5<img src="./images/serving_flant5.png"></img><br>Generate Text</br></center></p></a>  |<a href="./real-esrgan"><p><center>Real-ESRGAN<img src="./images/real_esrgan.jpeg"></img><br>Upscale images</br></center></p></a>
+| <a href="./serving-stable-diffusion"><p><center>Stable Diffusion<img src="./images/sd.png"></img><br>Generate images from a text prompt</br></center></p></a>| <a href="./serving-flant5"><p><center>FLAN-T5<img src="./images/serving_flant5.png"></img><br>Generate Text</br></center></p></a>  |<a href="./real-esrgan"><p><center>Real-ESRGAN<img src="./images/real_esrgan.jpeg"></img><br>Upscale images</br></center></p></a>
 | ---- | ---- | ---- |
 <a href="./blip"><p><center>BLIP<img src="./images/blip.jpeg"></img><br>Image captioning</br></center></p></a> | <a href="./bart"><p><center>BART<img src="./images/summarization.png"></img><br>Summarize Text</br></center></p></a> |
 
