@@ -61,9 +61,12 @@ You'll need to enable Vertex AI and have authenticated with a service account th
 
     ```bash
     python ../gcp_deploy.py --image-uri gcr.io/$PROJECT_ID/serving-sd:latest --model-name stable-diffusion --endpoint-name stable-diffusion-endpoint --endpoint-deployed-name stable-diffusion-deployed-name
+    ```
 
-1. Test the endpoint
+1. The last command will display the endpoint name, it should look like `projects/611558971877/locations/us-central1/endpoints/3386579376433790976`: 
+
+    Test the endpoint using the endpoint name.
 
     ```bash
-    python generate_request_vertex.py
+    python generate_request_vertex.py --endpoint-name projects/611558971877/locations/us-central1/endpoints/3386579376433790976
     ```
