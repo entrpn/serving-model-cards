@@ -1,4 +1,4 @@
-# Instruction Tunining GPTJ-6B
+# Instruction Tuning GPTJ-6B
 
 **This repo is a work in progress and might not work correctly**
 
