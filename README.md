@@ -11,7 +11,7 @@ By using Vertex AI endpoints, users don't need to manage complex infrastructure 
 
 | <a href="./serving-stable-diffusion"><p><center>Stable Diffusion<img src="./images/sd.png"></img><br>Generate images from a text prompt</br></center></p></a>| <a href="./serving-flant5"><p><center>FLAN-T5<img src="./images/serving_flant5.png"></img><br>Generate Text</br></center></p></a>  |<a href="./real-esrgan"><p><center>Real-ESRGAN<img src="./images/real_esrgan.jpeg"></img><br>Upscale images</br></center></p></a>
 | ---- | ---- | ---- |
-<a href="./blip"><p><center>BLIP<img src="./images/blip.jpeg"></img><br>Image captioning</br></center></p></a> | <a href="./bart"><p><center>BART<img src="./images/summarization.png"></img><br>Summarize Text</br></center></p></a> |
+<a href="./blip"><p><center>BLIP<img src="./images/blip.jpeg"></img><br>Image captioning</br></center></p></a> | <a href="./bart"><p><center>BART<img src="./images/summarization.png"></img><br>Summarize Text</br></center></p></a> | <a href="./instruct-tune-gptj"><p><center>Instruct GPTJ<img src="./images/gptj-instruct-card.png"></img><br>Instruction tune GPTJ</br></center></p></a> | ---- | ---- | ---- |
 
 # training-model-cards
 

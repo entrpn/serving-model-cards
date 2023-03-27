@@ -4,6 +4,8 @@
 
 Instruction tune [GPTJ-6B](https://github.com/kingoflolz/mesh-transformer-jax) on a T4 GPU using the cleaned [Alpaca dataset](https://github.com/gururise/AlpacaDataCleaned) and [LoRA](https://arxiv.org/abs/2106.09685).
 
+This is more of a thought experiment, no benchmarking of any kind has been done. Use it at your own risk.
+
 Features
 - 8 bit attention linear layers quantization to load model on less than 10GB of GPU RAM. Finetuning still requires 15GB.
 - 8 bit adam optimizer.
