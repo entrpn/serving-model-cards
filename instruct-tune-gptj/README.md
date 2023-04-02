@@ -62,11 +62,17 @@ Features
 
 The loss plot:
 
-<center>
-    <image src="./images/loss_graph.png">
-</center>
+  <center>
+      <image src="./images/loss_graph.png">
+  </center>
 
-  **Note that there is another file main_distributed.py where I was building the LoRA models from scratch, however midway I came across the [peft library](https://github.com/huggingface/peft) which makes it easier to create the LoRA layers. I left main_distributed.py for reference on how LoRA can be implemented from scratch. Do not use!**
+  I also trained longer, to 15k steps which resulted in bad performance. The loss increases after 3.5k steps and the model is not able to recover. I've still not found the cause but maybe using a decaying learning rate can stabilize training.
+
+  <center>
+    <image src="./images/loss_graph_15k.png">
+  </center>
+
+  **There is another file main_distributed.py where I was building the LoRA models from scratch, however midway I came across the [peft library](https://github.com/huggingface/peft) which makes it easier to create the LoRA layers. I left main_distributed.py for reference on how LoRA can be implemented from scratch. Do not use!**
 
 1. When training is finished, make an inference call. This loads the model and loads the LoRA weights.
 
