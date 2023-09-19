@@ -118,3 +118,27 @@ Features:
     </center>
 
     Don't forget to consolidate the sharded files into one to use for training , for example, with [Stable diffusion](../finetuning-stable-diffusion).
+
+## Running with multiple GPUs
+
+If you're trying to deploy this with multiple workers and multiple GPUs, check your project's quota allows for this, or you'll be prevented from running efficiently. Leaving the default `max_num_workers` value of 100 will surely saturate the single GPU in the job above for large workloads. Instead, set the value to something reasonable and increase the number of GPUs. For example.
+
+    ```bash
+    python pipeline.py \
+    --dataset-filename gs://$BUCKET_ID/$PREFIX/dataset.txt \
+    --output-filename gs://$BUCKET_ID/$PREFIX/metadata.jsonl \
+    --runner=DataflowRunner \
+    --project=$PROJECT_ID \
+    --region=us-central1 \
+    --job_name=captioning \
+    --temp_location=gs://$PROJECT_ID-bucket/ \
+    --sdk_container_image=gcr.io/$PROJECT_ID/dataflow-captioning:latest \
+    --machine_type=n1-standard-16 \
+    --experiment="worker_accelerator=type:nvidia-tesla-t4;count:4;install-nvidia-driver" \
+    --experiment=use_runner_v2 \
+    --disk_size_gb=200 \
+    --subnetwork=https://www.googleapis.com/compute/v1/projects/$PROJECT_ID/regions/us-central1/subnetworks/jfacevedo-demo-subnet \
+    --service_account_email=vertex-ai@$PROJECT_ID.iam.gserviceaccount.com \
+    --sdk_location=container \
+    --max_num_workers=4
+    ```
